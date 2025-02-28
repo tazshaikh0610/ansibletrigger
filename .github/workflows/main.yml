@@ -1,0 +1,31 @@
+name: Trigger Ansible Playbook with Repository Dispatch
+
+'on':
+  repository_dispatch:
+    types: [trigger-ansible]
+
+jobs:
+  trigger-ansible:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install Ansible
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible
+
+      - name: Run Ansible Playbook
+        run: |
+          ansible-playbook -i inventory playbook.yml \
+            -e repo_name=${{ github.event.client_payload.repo_name }} \
+            -e branch_name=${{ github.event.client_payload.branch_name }} \
+            -e jfrog_url=${{ github.event.client_payload.jfrog_url }} \
+            -e version=${{ github.event.client_payload.version }} \
+            -e env=${{ github.event.client_payload.env }}
