@@ -23,7 +23,7 @@ jobs:
 
       - name: Run Ansible Playbook
         run: |
-          ansible-playbook -i inventory playbook.yml \
+          ansibleplaybook -i inventory playbook.yml \
             -e repo_name=${{ github.event.client_payload.repo_name }} \
             -e branch_name=${{ github.event.client_payload.branch_name }} \
             -e jfrog_url=${{ github.event.client_payload.jfrog_url }} \
