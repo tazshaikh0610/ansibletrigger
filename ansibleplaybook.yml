@@ -1,0 +1,22 @@
+---
+- hosts: localhost
+  vars:
+    repo_name: "{{ repo_name }}"
+    branch_name: "{{ branch_name }}"
+    jfrog_url: "{{ jfrog_url }}"
+    version: "{{ version }}"
+    env: "{{ env }}"
+
+  tasks:
+    - name: Print variables
+      debug:
+        msg: |
+          Repository Name: {{ repo_name }}
+          Branch Name: {{ branch_name }}
+          JFrog URL: {{ jfrog_url }}
+          Version: {{ version }}
+          Environment: {{ env }}
+
+    - name: Example Task
+      debug:
+        msg: "Running deployment for {{ env }} environment"
