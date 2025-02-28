@@ -29,3 +29,4 @@ jobs:
             -e jfrog_url=${{ github.event.client_payload.jfrog_url }} \
             -e version=${{ github.event.client_payload.version }} \
             -e env=${{ github.event.client_payload.env }}
+
