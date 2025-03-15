@@ -1,0 +1,38 @@
+name: Deployment via GitHub App
+
+on:
+  workflow_dispatch: # Allows manual trigger
+  repository_dispatch:
+    types: [ansible_trigger] # Triggered via API call
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger GitHub Actions Workflow via API
+        run: |
+          curl -X POST https://api.github.com/repos/${{ secrets.REPO_OWNER }}/${{ secrets.REPO_NAME }}/dispatches \
+               -H "Accept: application/vnd.github.v3+json" \
+               -H "Authorization: Bearer ${{ secrets.GITHUB_APP_TOKEN }}" \
+               -H "Content-Type: application/json" \
+               -d '{
+                     "event_type": "ansible_trigger",
+                     "client_payload": {
+                       "repository": "tazshaikh0610",
+                       "branch": "main",
+                       "deploy_sequence": "dev1"
+                     }
+                   }'
+  
+  deploy:
+    runs-on: ubuntu-latest
+    needs: trigger # Runs after the trigger job
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Display Incoming Parameters
+        run: |
+          echo "Repository: ${{ github.event.client_payload.repository }}"
+          echo "Branch: ${{ github.event.client_payload.branch }}"
+          echo "Deployment Sequence: ${{ github.event.client_payload.deploy_sequence }}"
